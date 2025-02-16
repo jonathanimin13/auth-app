@@ -3,6 +3,7 @@ package main
 import (
 	"auth-app/internal/infrastructure/handler"
 	"auth-app/internal/infrastructure/router"
+	"auth-app/internal/infrastructure/server"
 	"auth-app/pkg/logger"
 	"log"
 
@@ -18,6 +19,8 @@ func main() {
 	logger.SetLogger(logger.NewLogrusLogger())
 
 	handler := handler.NewHandler()
-
 	router := router.NewRouter(handler)
+	server := server.NewServer(router)
+
+	server.ListenAndServe()
 }

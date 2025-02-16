@@ -9,6 +9,7 @@ import (
 )
 
 type JWT interface {
+	GenerateAccesToken(userID int) (string, error)
 }
 
 type jwtImpl struct{}

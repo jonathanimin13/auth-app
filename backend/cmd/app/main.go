@@ -1,7 +1,8 @@
 package main
 
 import (
-	"auth-app/internal/infrastructure/db"
+	"auth-app/internal/infrastructure/handler"
+	"auth-app/internal/infrastructure/router"
 	"auth-app/pkg/logger"
 	"log"
 
@@ -14,11 +15,9 @@ func main() {
 		log.Fatalf("env: %v", err)
 	}
 
-	db, err := db.ConnectDB()
-	if err != nil {
-		log.Fatalf("db: %v", err)
-	}
-	defer db.Close()
-
 	logger.SetLogger(logger.NewLogrusLogger())
+
+	handler := handler.NewHandler()
+
+	router := router.NewRouter(handler)
 }

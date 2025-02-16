@@ -8,16 +8,16 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type JWTService interface {
+type JWT interface {
 }
 
-type jwtServiceImpl struct{}
+type jwtImpl struct{}
 
-func NewJWTService() JWTService {
-	return &jwtServiceImpl{}
+func NewJWT() JWT {
+	return &jwtImpl{}
 }
 
-func (j *jwtServiceImpl) GenerateAccesToken(userID int) (string, error) {
+func (j *jwtImpl) GenerateAccesToken(userID int) (string, error) {
 	now := time.Now()
 	registeredClaims := jwt.RegisteredClaims{
 		Issuer:  "e_commerce_app",

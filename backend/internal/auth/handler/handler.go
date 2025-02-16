@@ -9,7 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type AuthHandler interface{}
+type AuthHandler interface{
+	Login(ctx *gin.Context)
+}
 
 type authHandlerImpl struct {
 	u usecase.AuthUsecase

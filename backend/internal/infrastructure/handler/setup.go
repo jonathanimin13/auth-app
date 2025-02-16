@@ -11,7 +11,7 @@ import (
 )
 
 type Handler struct {
-	authHandler handler.AuthHandler
+	AuthHandler handler.AuthHandler
 }
 
 
@@ -32,6 +32,6 @@ func NewHandler() *Handler {
 	authHandler := handler.NewAuthHandler(authUsecase)
 
 	return &Handler{
-		authHandler: authHandler,
+		AuthHandler: authHandler,
 	}
 }

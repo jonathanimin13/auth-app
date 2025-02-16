@@ -4,6 +4,7 @@ import (
 	"auth-app/internal/infrastructure/handler"
 	"auth-app/internal/infrastructure/router"
 	"auth-app/internal/infrastructure/server"
+	"auth-app/pkg/jsonvalidator"
 	"auth-app/pkg/logger"
 	"log"
 
@@ -17,6 +18,7 @@ func main() {
 	}
 
 	logger.SetLogger(logger.NewLogrusLogger())
+	jsonvalidator.SetupValidator()
 
 	handler := handler.NewHandler()
 	router := router.NewRouter(handler)

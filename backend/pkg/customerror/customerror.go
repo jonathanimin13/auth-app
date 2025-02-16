@@ -38,20 +38,6 @@ func NewUnauthorizedError(field string, sentinel error, actual error) *Unauthori
 	}
 }
 
-type ForbiddenError struct {
-	customError
-}
-
-func NewForbiddenError(field string, sentinel error, actual error) *ForbiddenError {
-	return &ForbiddenError{
-		customError: customError{
-			Field:    field,
-			Sentinel: sentinel,
-			Actual:   actual,
-		},
-	}
-}
-
 type NotFoundError struct {
 	customError
 }

@@ -21,7 +21,7 @@ func NewJWT() JWT {
 func (j *jwtImpl) GenerateAccesToken(userID int) (string, error) {
 	now := time.Now()
 	registeredClaims := jwt.RegisteredClaims{
-		Issuer:  "e_commerce_app",
+		Issuer:  os.Getenv("TOKEN_ISSUER"),
 		Subject: fmt.Sprint(userID),
 		IssuedAt: &jwt.NumericDate{
 			Time: now,

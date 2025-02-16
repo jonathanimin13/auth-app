@@ -2,6 +2,7 @@ package main
 
 import (
 	"auth-app/internal/infrastructure/db"
+	"auth-app/pkg/logger"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -18,4 +19,6 @@ func main() {
 		log.Fatalf("db: %v", err)
 	}
 	defer db.Close()
+
+	logger.SetLogger(logger.NewLogrusLogger())
 }

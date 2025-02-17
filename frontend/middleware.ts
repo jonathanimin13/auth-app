@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export const middleware = async (req: NextRequest) => {
-  console.log("middleware here");
-
   const protectedRoute = ["/"];
   const privateRoute = ["/login", "/register"];
 

@@ -7,8 +7,8 @@ import (
 	"auth-app/pkg/customerror"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	cors "github.com/itsjamie/gin-cors"
 )
 
 func NewRouter(handler *handler.Handler) *gin.Engine {
@@ -16,14 +16,14 @@ func NewRouter(handler *handler.Handler) *gin.Engine {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Logger)
 	r.Use(middleware.Error)
-	r.Use(cors.Middleware(cors.Config{
-		Origins:        "http://localhost:3000",
-		Methods:        "GET, PUT, POST, PATCH, DELETE",
-		RequestHeaders: "Origin, Authorization, Content-Type",
-		ExposedHeaders: "",
-		MaxAge:         50 * time.Second,
-		Credentials:    true,
-	}))
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, 
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+}))
 
 	setupNoRoute(r)
 
@@ -37,7 +37,9 @@ func setupAuthRoute(baseEndpoint *gin.RouterGroup, handler *handler.Handler) {
 	authGroup := baseEndpoint.Group("/auth")
 	{
 		authGroup.POST("/login", handler.AuthHandler.Login)
+		authGroup.POST("/logout", handler.AuthHandler.Logout)
 		authGroup.GET("/verify-token", middleware.Auth, handler.AuthHandler.VerifyToken)
+		authGroup.GET("/user", middleware.Auth, handler.AuthHandler.User)
 	}
 }
 

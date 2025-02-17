@@ -13,7 +13,9 @@ import (
 
 type AuthHandler interface{
 	Login(ctx *gin.Context)
+	Logout(ctx *gin.Context)
 	VerifyToken(ctx *gin.Context)
+	User(ctx *gin.Context)
 }
 
 type authHandlerImpl struct {
@@ -50,6 +52,14 @@ func (h *authHandlerImpl) Login(ctx *gin.Context)  {
 	})
 }
 
+func (h *authHandlerImpl) Logout(ctx *gin.Context)  {
+	ctx.SetCookie("access-token", "", -1, "/", "localhost", false, true)
+
+	ctx.JSON(http.StatusOK, dto.Response{
+		Message: "logout succes",
+	})
+}
+
 func (h *authHandlerImpl) VerifyToken(ctx *gin.Context) {
 	_, ok := ctx.Get("sub")
 	if !ok {
@@ -59,5 +69,27 @@ func (h *authHandlerImpl) VerifyToken(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, dto.Response{
 		Message: "token valid",
+	})
+}
+
+func (h *authHandlerImpl) User(ctx *gin.Context) {
+	userID, ok := ctx.Get("sub")
+	if !ok {
+		ctx.Error(customerror.NewUnauthorizedError(apperrors.FieldToken, apperrors.ErrInvalidToken, apperrors.ErrInvalidToken))
+		return
+	}
+
+	c := ctx.Request.Context()
+	user, err := h.u.User(c, userID.(int))
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	userDTO := converter.UserConverter{}.EntityToDTO(user)
+
+	ctx.JSON(http.StatusOK, dto.Response{
+		Message: "token valid",
+		Data: userDTO,
 	})
 }

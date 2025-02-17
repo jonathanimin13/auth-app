@@ -40,6 +40,12 @@ func Auth(ctx *gin.Context) {
 		return
 	}
 
+	if (subInt < 1) {
+		ctx.Error(customerror.NewUnauthorizedError(apperrors.FieldToken, apperrors.ErrInvalidToken, apperrors.ErrInvalidToken))
+		ctx.Abort()
+		return
+	}
+
 	ctx.Set("sub", subInt)
 	ctx.Next()
 }

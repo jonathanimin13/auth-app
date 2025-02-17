@@ -36,6 +36,7 @@ func NewRouter(handler *handler.Handler) *gin.Engine {
 func setupAuthRoute(baseEndpoint *gin.RouterGroup, handler *handler.Handler) {
 	authGroup := baseEndpoint.Group("/auth")
 	{
+		authGroup.GET("/verify-token", middleware.Auth, handler.AuthHandler.Login)
 		authGroup.POST("/login", handler.AuthHandler.Login)
 	}
 }

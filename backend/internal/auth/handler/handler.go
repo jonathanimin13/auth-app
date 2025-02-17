@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"auth-app/internal/apperrors"
 	"auth-app/internal/auth/converter"
 	"auth-app/internal/auth/usecase"
 	"auth-app/internal/dto"
+	"auth-app/pkg/customerror"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -44,5 +46,17 @@ func (h *authHandlerImpl) Login(ctx *gin.Context)  {
 
 	ctx.JSON(http.StatusOK, dto.Response{
 		Message: "login succes",
+	})
+}
+
+func (h *authHandlerImpl) VerifyToken(ctx *gin.Context) {
+	_, ok := ctx.Get("sub")
+	if !ok {
+		ctx.Error(customerror.NewUnauthorizedError(apperrors.FieldToken, apperrors.ErrInvalidToken, apperrors.ErrInvalidToken))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.Response{
+		Message: "token valid",
 	})
 }

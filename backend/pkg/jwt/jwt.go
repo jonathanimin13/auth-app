@@ -10,6 +10,7 @@ import (
 
 type JWT interface {
 	GenerateAccesToken(userID int) (string, error)
+	ParseAccessToken(tokenStr string) (*jwt.MapClaims, error)
 }
 
 type jwtImpl struct{}
@@ -38,4 +39,30 @@ func (j *jwtImpl) GenerateAccesToken(userID int) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func (j *jwtImpl) ParseAccessToken(tokenStr string) (*jwt.MapClaims, error) {
+	token, err := jwt.Parse(
+		tokenStr,
+		func(t *jwt.Token) (interface{}, error) {
+			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
+			}
+			return []byte(os.Getenv("SECRET_KEY")), nil
+		},
+		jwt.WithIssuer(os.Getenv("TOKEN_ISSUER")),
+		jwt.WithIssuedAt(),
+		jwt.WithExpirationRequired(),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := token.Claims.(*jwt.MapClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid token claims")
+	}
+
+	return claims, nil
 }

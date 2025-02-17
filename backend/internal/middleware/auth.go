@@ -5,17 +5,23 @@ import (
 	"auth-app/pkg/customerror"
 	"auth-app/pkg/jwt"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func Auth(ctx *gin.Context) {
-	token, err := ctx.Cookie("access-token")
-	if err != nil {
-		ctx.Error(customerror.NewUnauthorizedError(apperrors.FieldToken, apperrors.ErrInvalidToken, err))
+
+	authHeader := ctx.GetHeader("Authorization")
+
+	if authHeader == "" {
+		ctx.Error(customerror.NewUnauthorizedError(apperrors.FieldToken, apperrors.ErrInvalidToken, apperrors.ErrInvalidToken))
 		ctx.Abort()
 		return
 	}
+
+	authToken := strings.Split(authHeader, " ")
+	token := authToken[1]
 
 	var jwt = jwt.NewJWT()
 

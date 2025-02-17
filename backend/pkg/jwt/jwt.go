@@ -59,10 +59,10 @@ func (j *jwtImpl) ParseAccessToken(tokenStr string) (*jwt.MapClaims, error) {
 		return nil, err
 	}
 
-	claims, ok := token.Claims.(*jwt.MapClaims)
+	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return nil, fmt.Errorf("invalid token claims")
 	}
 
-	return claims, nil
+	return &claims, nil
 }

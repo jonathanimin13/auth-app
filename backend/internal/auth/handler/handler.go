@@ -13,6 +13,7 @@ import (
 
 type AuthHandler interface{
 	Login(ctx *gin.Context)
+	VerifyToken(ctx *gin.Context)
 }
 
 type authHandlerImpl struct {

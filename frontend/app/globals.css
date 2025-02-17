@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-white: #ffffff;
+  --primary-black: #171717;
+}
+
+body {
+  color: var(--primary-black);
+  background: var(--primary-white);
+  font-family: Arial, Helvetica, sans-serif;
+}

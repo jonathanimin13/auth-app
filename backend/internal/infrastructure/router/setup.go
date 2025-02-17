@@ -38,6 +38,7 @@ func setupAuthRoute(baseEndpoint *gin.RouterGroup, handler *handler.Handler) {
 	{
 		authGroup.POST("/login", handler.AuthHandler.Login)
 		authGroup.POST("/logout", handler.AuthHandler.Logout)
+		authGroup.POST("/register", handler.AuthHandler.Register)
 		authGroup.GET("/verify-token", middleware.Auth, handler.AuthHandler.VerifyToken)
 		authGroup.GET("/user", middleware.Auth, handler.AuthHandler.User)
 	}

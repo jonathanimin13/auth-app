@@ -16,6 +16,7 @@ type AuthHandler interface{
 	Logout(ctx *gin.Context)
 	VerifyToken(ctx *gin.Context)
 	User(ctx *gin.Context)
+	Register(ctx *gin.Context)
 }
 
 type authHandlerImpl struct {
@@ -91,5 +92,27 @@ func (h *authHandlerImpl) User(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, dto.Response{
 		Message: "token valid",
 		Data: userDTO,
+	})
+}
+
+func (h *authHandlerImpl) Register(ctx *gin.Context) {
+	var registerReqBody dto.RegisterRequestBody
+	err := ctx.ShouldBindBodyWithJSON(&registerReqBody)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	registerData := converter.RegisterConverter{}.DTOToEntity(&registerReqBody)
+	c := ctx.Request.Context()
+
+	err = h.u.Register(c, registerData)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, dto.Response{
+		Message: "register succes",
 	})
 }

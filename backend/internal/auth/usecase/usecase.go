@@ -14,6 +14,7 @@ import (
 type AuthUsecase interface{
 	Login(ctx context.Context, loginData *entity.User) (string, error)
 	User(ctx context.Context, userID int) (*entity.User, error)
+	Register(ctx context.Context, registerData *entity.User) error
 }
 
 type authUsecaseImpl struct {
@@ -64,4 +65,28 @@ func (u *authUsecaseImpl) User(ctx context.Context, userID int) (*entity.User, e
 	}
 
 	return user, nil
+}
+
+func (u *authUsecaseImpl) Register(ctx context.Context, registerData *entity.User) error {
+	isExists, err := u.r.IsEmailExists(ctx, registerData.Email)
+	if err != nil {
+		return err
+	}
+	if isExists {
+		return customerror.NewBadRequestError(autherrors.FieldRegister, autherrors.ErrEmailExists, autherrors.ErrEmailExists)
+	}
+
+	hashPassword, err := u.b.GenerateFromPassword([]byte(registerData.Password))
+	if err != nil {
+		return customerror.NewInternalServerError(apperrors.FieldServer, apperrors.ErrInternalServer, err)
+	}
+
+	registerData.Password = string(hashPassword)
+
+	err = u.r.InsertUser(ctx, registerData)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

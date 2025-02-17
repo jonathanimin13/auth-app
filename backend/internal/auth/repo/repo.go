@@ -12,6 +12,7 @@ type AuthRepo interface{
 	IsEmailExists(ctx context.Context, email string) (bool, error)
 	FindUserByEmail(ctx context.Context, email string) (*entity.User, error)
 	FindUserByID(ctx context.Context, userID int) (*entity.User, error)
+	InsertUser(ctx context.Context, user *entity.User) error
 }
 
 type authRepoImpl struct {
@@ -91,4 +92,17 @@ func (r *authRepoImpl) FindUserByID(ctx context.Context, userID int) (*entity.Us
 	}
 
 	return &user, nil
+}
+
+func (r *authRepoImpl) InsertUser(ctx context.Context, user *entity.User) error {
+	query := `INSERT INTO users (username, email, password)
+						VALUES
+						($1, $2, $3)`
+
+	_, err := r.db.ExecContext(ctx, query, user.Username, user.Email, user.Password)
+	if err != nil {
+		return customerror.NewInternalServerError(apperrors.FieldServer, apperrors.ErrInternalServer, err)
+	}
+
+	return nil
 }

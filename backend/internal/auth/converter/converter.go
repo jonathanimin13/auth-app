@@ -22,3 +22,13 @@ func (c UserConverter) EntityToDTO(user *entity.User) *dto.UserResponseBody {
 		Username: user.Username,
 	}
 }
+
+type RegisterConverter struct{}
+
+func (c RegisterConverter) DTOToEntity(dto *dto.RegisterRequestBody) *entity.User {
+	return &entity.User{
+		Username: dto.Username,
+		Email: dto.Email,
+		Password: dto.Password,
+	}
+}

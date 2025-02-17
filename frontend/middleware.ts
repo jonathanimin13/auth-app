@@ -25,7 +25,7 @@ export const middleware = async (req: NextRequest) => {
   if (isProtectedRoute && token) {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/auth/verify-token",
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/verify-token`,
         {
           method: "GET",
           headers: {

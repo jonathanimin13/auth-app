@@ -4,7 +4,7 @@ import { Response, User } from "../types/api";
 export default async function Home() {
   const cookieStore = await cookies();
   const token = cookieStore.get("access-token");
-  const response = await fetch("http://localhost:8080/api/auth/user", {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/user`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token?.value}`,

@@ -12,7 +12,7 @@ import (
 )
 
 type AuthUsecase interface{
-	Login(ctx context.Context, loginData *entity.User) (*entity.User, error)
+	Login(ctx context.Context, loginData *entity.User) (string, error)
 }
 
 type authUsecaseImpl struct {
@@ -29,31 +29,29 @@ func NewAuthUsecase(r repo.AuthRepo, b bcrypt.Bcrypt, j jwt.JWT) AuthUsecase {
 	}
 }
 
-func (u *authUsecaseImpl) Login(ctx context.Context, loginData *entity.User) (*entity.User, error) {
+func (u *authUsecaseImpl) Login(ctx context.Context, loginData *entity.User) (string, error) {
 	isExists, err := u.r.IsEmailExists(ctx, loginData.Email)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	if !isExists {
-		return nil, customerror.NewBadRequestError(autherrors.FieldLogin, autherrors.ErrInvalidEmailOrPassword, autherrors.ErrInvalidEmailOrPassword)
+		return "", customerror.NewBadRequestError(autherrors.FieldLogin, autherrors.ErrInvalidEmailOrPassword, autherrors.ErrInvalidEmailOrPassword)
 	}
 
 	user, err := u.r.FindUserByEmail(ctx, loginData.Email)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	err = u.b.CompareHashAndPassword([]byte(user.Password), []byte(loginData.Password))
 	if err != nil {
-		return nil, customerror.NewBadRequestError(autherrors.FieldLogin, autherrors.ErrInvalidEmailOrPassword, err)
+		return "", customerror.NewBadRequestError(autherrors.FieldLogin, autherrors.ErrInvalidEmailOrPassword, err)
 	}
 
 	accessToken, err := u.j.GenerateAccesToken(user.ID)
 	if err != nil {
-		return nil, customerror.NewInternalServerError(apperrors.FieldServer, apperrors.ErrInternalServer, err)
+		return "", customerror.NewInternalServerError(apperrors.FieldServer, apperrors.ErrInternalServer, err)
 	}
 
-	user.AccesToken = accessToken
-
-	return user, nil
+	return accessToken, nil
 }

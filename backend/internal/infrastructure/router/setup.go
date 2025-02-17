@@ -5,8 +5,10 @@ import (
 	"auth-app/internal/infrastructure/handler"
 	"auth-app/internal/middleware"
 	"auth-app/pkg/customerror"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	cors "github.com/itsjamie/gin-cors"
 )
 
 func NewRouter(handler *handler.Handler) *gin.Engine {
@@ -14,6 +16,14 @@ func NewRouter(handler *handler.Handler) *gin.Engine {
 	r.Use(gin.Recovery())
 	r.Use(middleware.Logger)
 	r.Use(middleware.Error)
+	r.Use(cors.Middleware(cors.Config{
+		Origins:        "http://localhost:3000",
+		Methods:        "GET, PUT, POST, PATCH, DELETE",
+		RequestHeaders: "Origin, Authorization, Content-Type",
+		ExposedHeaders: "",
+		MaxAge:         50 * time.Second,
+		Credentials:    true,
+	}))
 
 	setupNoRoute(r)
 

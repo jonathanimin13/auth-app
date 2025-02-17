@@ -23,7 +23,7 @@ func SetupValidator() {
 func ExtractValidationError(fe validator.FieldError) string {
 	switch fe.Tag() {
 	case "required":
-		return "This field is required"
+		return fe.Field() + " is required"
 	case "email":
 		return fe.Field() + " must be in email format"
 	case "password":

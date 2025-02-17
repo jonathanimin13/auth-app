@@ -13,6 +13,7 @@ import (
 
 type AuthUsecase interface{
 	Login(ctx context.Context, loginData *entity.User) (string, error)
+	User(ctx context.Context, userID int) (*entity.User, error)
 }
 
 type authUsecaseImpl struct {
@@ -54,4 +55,13 @@ func (u *authUsecaseImpl) Login(ctx context.Context, loginData *entity.User) (st
 	}
 
 	return accessToken, nil
+}
+
+func (u *authUsecaseImpl) User(ctx context.Context, userID int) (*entity.User, error) {
+	user, err := u.r.FindUserByID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

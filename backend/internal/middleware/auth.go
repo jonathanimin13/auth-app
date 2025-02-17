@@ -4,6 +4,7 @@ import (
 	"auth-app/internal/apperrors"
 	"auth-app/pkg/customerror"
 	"auth-app/pkg/jwt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -11,6 +12,8 @@ import (
 )
 
 func Auth(ctx *gin.Context) {
+
+	log.Println(ctx.Request.Cookies())
 
 	authHeader := ctx.GetHeader("Authorization")
 

@@ -14,9 +14,11 @@ func (c LoginConverter) DTOToEntity(dto *dto.LoginRequestBody) *entity.User {
 	}
 }
 
-func (c LoginConverter) EntityToDTO(user entity.User) *dto.LoginResponseBody {
-	return &dto.LoginResponseBody{
+type UserConverter struct{}
+
+func (c UserConverter) EntityToDTO(user *entity.User) *dto.UserResponseBody {
+	return &dto.UserResponseBody{
+		Email: user.Email,
 		Username: user.Username,
-		AccesToken: user.AccesToken,
 	}
 }

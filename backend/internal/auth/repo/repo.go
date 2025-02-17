@@ -11,6 +11,7 @@ import (
 type AuthRepo interface{
 	IsEmailExists(ctx context.Context, email string) (bool, error)
 	FindUserByEmail(ctx context.Context, email string) (*entity.User, error)
+	FindUserByID(ctx context.Context, userID int) (*entity.User, error)
 }
 
 type authRepoImpl struct {
@@ -61,6 +62,29 @@ func (r *authRepoImpl) FindUserByEmail(ctx context.Context, email string) (*enti
 		&user.ID,
 		&user.Username,
 		&user.Password,
+	)
+	if err != nil {
+		return nil, customerror.NewInternalServerError(apperrors.FieldServer, apperrors.ErrInternalServer, err)
+	}
+
+	return &user, nil
+}
+
+func (r *authRepoImpl) FindUserByID(ctx context.Context, userID int) (*entity.User, error) {
+	query := `SELECT
+							email,
+							username
+						FROM
+							users
+						WHERE 
+							id = $1
+						AND 
+							deleted_at IS NULL`
+
+	var user entity.User
+	err := r.db.QueryRowContext(ctx, query, userID).Scan(
+		&user.Email,
+		&user.Username,
 	)
 	if err != nil {
 		return nil, customerror.NewInternalServerError(apperrors.FieldServer, apperrors.ErrInternalServer, err)

@@ -9,7 +9,11 @@ export interface FetchError {
   detail: string;
 }
 
-export interface User {
-  username: string;
+export interface Token {
   access_token: string;
+}
+
+export interface User {
+  email: string;
+  username: string;
 }

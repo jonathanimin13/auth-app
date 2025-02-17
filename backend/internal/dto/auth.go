@@ -6,6 +6,10 @@ type LoginRequestBody struct {
 }
 
 type LoginResponseBody struct {
-	Username   string `json:"username"`
 	AccesToken string `json:"access_token"`
+}
+
+type UserResponseBody struct {
+	Email    string `json:"email"`
+	Username string `json:"username"`
 }

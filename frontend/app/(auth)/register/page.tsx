@@ -123,7 +123,7 @@ export const Login = () => {
           </div>
         </div>
         <Button disabled={isPending}>
-          {isPending ? "Loading..." : "Login"}
+          {isPending ? "Loading..." : "Register"}
         </Button>
       </form>
       <div>

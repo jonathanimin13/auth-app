@@ -39,3 +39,6 @@
 
 4. Finally, run the `backend` and `frontend` 
 (for backend, main.go is located at /backend/cmd/app/main.go)
+---
+### Demo video
+https://drive.google.com/file/d/1isCNETvHUqwsQ_k1uqYIWdaptIzI1jO1/view?usp=sharing
